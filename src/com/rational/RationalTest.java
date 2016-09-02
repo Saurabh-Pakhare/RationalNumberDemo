@@ -1,5 +1,4 @@
 package com.rational;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,16 +18,18 @@ public class RationalTest {
     @Test
     public void checkTestMeAnnotation() {
         try {
-           // Class<?> cls = Class.forName("Rational");
+
             Rational rational = new Rational();
-            Method[] methods = rational.getClass().getMethods();
+            Method[] methods = rational.getClass().getDeclaredMethods();
             long ans = 0;
 
             for (Method m : methods) {
                 TestMe testMe = m.getAnnotation(TestMe.class);
                 if (testMe != null) {
-                    ans = (long) m.invoke(rationalOne, 1, 6);
-                    assertEquals(1L, ans);
+                    m.setAccessible(true);
+                    ans = (long) m.invoke(rationalOne, 2, 4);
+                    assertEquals(2L, ans);
+                    System.out.println(ans);
                 }
             }
 
@@ -43,28 +44,30 @@ public class RationalTest {
 
     @Before
     public void initialize() {
-        rationalOne = new Rational(1, 6);
-        rationalTwo = new Rational(3, 8);
+        rationalOne = new Rational(2, 2);
+        rationalTwo = new Rational(1, 2);
+
+        //System.out.println(rationalOne);
     }
 
     @org.junit.Test
     public void add() throws Exception {
-        assertEquals("13/24", rationalOne.add(rationalTwo).toString());
+        assertEquals("3/2", rationalOne.add(rationalTwo).toString());
     }
 
     @org.junit.Test
     public void subtract() throws Exception {
-        assertEquals("-5/24", rationalOne.subtract(rationalTwo).toString());
+        assertEquals("1/2", rationalOne.subtract(rationalTwo).toString());
     }
 
     @org.junit.Test
     public void multiply() throws Exception {
-        assertEquals("1/16", rationalOne.multiply(rationalTwo).toString());
+        assertEquals("1/2", rationalOne.multiply(rationalTwo).toString());
     }
 
     @org.junit.Test
     public void divide() throws Exception {
-        assertEquals("4/9", rationalOne.divide(rationalTwo).toString());
+        assertEquals("2", rationalOne.divide(rationalTwo).toString());
     }
 
 
